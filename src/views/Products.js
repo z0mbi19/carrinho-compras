@@ -1,26 +1,30 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { Products } from "../api/Products";
 import ProductItem from "../components/ProductItem";
 
 import "./Products.css";
 
-export class ProductsList extends Component {
-  state = {
-    products: [],
-  };
+function ProductsList(props) {
+  const [product, setProduct] = useState([]);
 
-  async componentWillMount() {
-    const { items } = await Products.getProducts();
-    this.setState({ products: items });
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const results = await Products.getProducts();
+      setProduct(results.items);
+    };
 
-  render() {
-    return (
-      <ul className="products-list">
-        {this.state.products.map((p) => (
-          <ProductItem key={p.id} products={p} />
-        ))}
-      </ul>
-    );
-  }
+    fetchData();
+  }, [product]);
+
+  return (
+    <ul className="products-list">
+      {product === [] ? (
+        <h1>Loading</h1>
+      ) : (
+        product.map((p) => <ProductItem key={p.id} products={p} />)
+      )}
+    </ul>
+  );
 }
+
+export default ProductsList;
