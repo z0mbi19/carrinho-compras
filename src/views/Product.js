@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Products } from "../api/Products";
+import { addToCart } from "../actions";
+import { useSelector, useDispatch } from "react-redux";
 
 function Product(props) {
   const [product, setProduct] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +31,7 @@ function Product(props) {
         </span>
       )}
       {product === [] ? <h1>Loading</h1> : <p>{product.description}</p>}
+      <button onClick={() => dispatch(addToCart(product))}>Add to cart</button>
     </div>
   );
 }
